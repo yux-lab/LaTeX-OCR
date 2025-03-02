@@ -42,7 +42,7 @@ class Im2LatexDataset:
             equations (str, optional): Path to equations. Defaults to None.
             images (str, optional): Directory where images are saved. Defaults to None.
             tokenizer (str, optional): Path to saved tokenizer. Defaults to None.
-            shuffle (bool, opitonal): Defaults to True. 
+            shuffle (bool, opitonal): Defaults to True.
             batchsize (int, optional): Defaults to 16.
             max_seq_len (int, optional): Defaults to 1024.
             max_dimensions (tuple(int, int), optional): Maximal dimensions the model can handle
@@ -56,7 +56,7 @@ class Im2LatexDataset:
             assert tokenizer is not None
             self.images = [path.replace('\\', '/') for path in glob.glob(join(images, '*.png'))]
             self.sample_size = len(self.images)
-            eqs = open(equations, 'r').read().split('\n')
+            eqs = open(equations, 'r',encoding='UTF-8').read().split('\n')
             self.indices = [int(os.path.basename(img).split('.')[0]) for img in self.images]
             self.tokenizer = PreTrainedTokenizerFast(tokenizer_file=tokenizer)
             self.shuffle = shuffle
@@ -101,6 +101,12 @@ class Im2LatexDataset:
             self.pairs = np.random.permutation(np.array(self.pairs, dtype=object))
         else:
             self.pairs = np.array(self.pairs, dtype=object)
+        self.size = len(self.pairs)
+
+        # print("=== Debug: First 5 Batches in self.pairs ===")
+        # for i, batch in enumerate(self.pairs[:5]):  # by yux
+        #     print(f"Batch {i}: {batch}")
+
         self.size = len(self.pairs)
         return self
 
@@ -217,6 +223,8 @@ class Im2LatexDataset:
             self.tokenizer = PreTrainedTokenizerFast(tokenizer_file=tokenizer_file)
         self._get_size()
         iter(self)
+
+
 
 
 def generate_tokenizer(equations, output, vocab_size):
