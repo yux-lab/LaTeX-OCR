@@ -19,6 +19,10 @@ from pix2tex.dataset.transforms import train_transform, test_transform
 
 
 class Im2LatexDatasetTest:
+    """
+    To do
+    for test
+    """
     keep_smaller_batches = False
     shuffle = False
     batchsize = 16
@@ -156,7 +160,7 @@ class Im2LatexDatasetTest:
         if self.pad:
             h, w = images.shape[2:]
             images = F.pad(images, (0, self.max_dimensions[0]-w, 0, self.max_dimensions[1]-h), value=1)
-        return tok, images, image_paths[0]
+        return tok, images, image_paths
 
     def _get_size(self):
         self.size = 0
