@@ -1,4 +1,4 @@
-from pix2tex.dataset.dataset_test import Im2LatexDatasetTest
+from pix2tex.dataset.dataset import Im2LatexDataset
 import argparse
 import logging
 import yaml
@@ -30,8 +30,10 @@ def detokenize(tokens, tokenizer):
 
 
 @torch.no_grad()
-def evaluate(model: Model, dataset: Im2LatexDatasetTest, args: Munch, num_batches: int = None, name: str = 'test'):
-    """evaluate，and save prediction to csv"""
+def evaluate(model: Model, dataset: Im2LatexDataset, args: Munch, num_batches: int = None, name: str = 'test'):
+    """evaluate，and save prediction to csv
+        but path are wrong
+    """
     assert len(dataset) > 0
     device = args.device
     log = {}
@@ -48,7 +50,7 @@ def evaluate(model: Model, dataset: Im2LatexDatasetTest, args: Munch, num_batche
                 ["Image Path", "Predicted LaTeX", "Ground Truth", "BLEU Score", "Edit Distance", "Token Accuracy"])
 
         pbar = tqdm(enumerate(iter(dataset)), total=len(dataset))
-        for i, (seq, im, image_path) in pbar:
+        for i, (seq, im) in pbar:
             if seq is None or im is None:
                 continue
 
@@ -79,10 +81,11 @@ def evaluate(model: Model, dataset: Im2LatexDatasetTest, args: Munch, num_batche
             tok_acc = (dec == tgt_seq)[mask].float().mean().item()
             token_acc.append(tok_acc)
 
+            # get image path
+            image_path = dataset.images[i]
 
-            # for batchsize=1
-            writer.writerow([image_path[0], pred_latex, truth_latex, bleu, edit_dist, tok_acc])
-
+            # 保存到 CSV
+            writer.writerow([image_path, pred_latex, truth_latex, bleu, edit_dist, tok_acc])
 
             pbar.set_description(
                 'BLEU: %.3f, ED: %.2e, ACC: %.3f' % (np.mean(bleus), np.mean(edit_dists), np.mean(token_acc)))
@@ -128,10 +131,9 @@ if __name__ == '__main__':
     model.load_state_dict(torch.load(parsed_args.checkpoint, args.device))
 
     # load dataset
-    dataset = Im2LatexDatasetTest().load(parsed_args.data)
+    dataset = Im2LatexDataset().load(parsed_args.data)
     valargs = args.copy()
     valargs.update(batchsize=args.testbatchsize, keep_smaller_batches=True, test=True)
-
     # shuffle = True will lead to paths of images are not same as results
     dataset.update(**valargs, shuffle=False)
 
