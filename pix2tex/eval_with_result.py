@@ -79,11 +79,10 @@ def evaluate(model: Model, dataset: Im2LatexDatasetTest, args: Munch, num_batche
             tok_acc = (dec == tgt_seq)[mask].float().mean().item()
             token_acc.append(tok_acc)
 
-            # get image path
-            writer.writerow([image_path, pred_latex, truth_latex, bleu, edit_dist, tok_acc])
 
-            # save to csv
-            writer.writerow([image_path, pred_latex, truth_latex, bleu, edit_dist, tok_acc])
+            # for batchsize=1
+            writer.writerow([image_path[0], pred_latex, truth_latex, bleu, edit_dist, tok_acc])
+
 
             pbar.set_description(
                 'BLEU: %.3f, ED: %.2e, ACC: %.3f' % (np.mean(bleus), np.mean(edit_dists), np.mean(token_acc)))

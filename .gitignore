@@ -130,6 +130,7 @@ dmypy.json
 
 notebooks/**
 !notebooks/LaTeX_OCR*.ipynb
+!notebooks/notes.txt
 .ipynb_checkpoints/
 **/dataset/data/**
 wandb/

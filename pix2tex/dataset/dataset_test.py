@@ -156,7 +156,7 @@ class Im2LatexDatasetTest:
         if self.pad:
             h, w = images.shape[2:]
             images = F.pad(images, (0, self.max_dimensions[0]-w, 0, self.max_dimensions[1]-h), value=1)
-        return tok, images, image_paths
+        return tok, images, image_paths[0]
 
     def _get_size(self):
         self.size = 0

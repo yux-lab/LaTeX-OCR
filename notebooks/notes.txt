@@ -1,0 +1,9 @@
+# train
+python -m pix2tex.train --config D:\Yux\tex\lab\LaTeX-OCR\pix2tex\model\settings\config.yaml
+
+# generate test set shuffle=Flase
+python -m pix2tex.dataset.dataset_test --equations D:\Yux\tex\dataset\latex-ocr\math.txt -
+-images D:\Yux\tex\dataset\latex-ocr\formulae\mini_test --out pix2tex\dataset\data\mini_test.pkl
+
+# eval with result
+python -m pix2tex.eval_with_result --checkpoint pix2tex/model/checkpoints/weights.pth --data pix2tex/dataset/data/test.pkl
