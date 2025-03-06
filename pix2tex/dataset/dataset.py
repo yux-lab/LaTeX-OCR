@@ -56,7 +56,7 @@ class Im2LatexDataset:
             assert tokenizer is not None
             self.images = [path.replace('\\', '/') for path in glob.glob(join(images, '*.png'))]
             self.sample_size = len(self.images)
-            eqs = open(equations, 'r',encoding='UTF-8').read().split('\n')
+            eqs = open(equations, 'r', encoding='UTF-8').read().split('\n')
             self.indices = [int(os.path.basename(img).split('.')[0]) for img in self.images]
             self.tokenizer = PreTrainedTokenizerFast(tokenizer_file=tokenizer)
             self.shuffle = shuffle
@@ -261,7 +261,7 @@ if __name__ == '__main__':
                 dataset = Im2LatexDataset(equations, images, args.tokenizer)
             else:
                 dataset.combine(Im2LatexDataset(equations, images, args.tokenizer))
-        dataset.update(batchsize=1, keep_smaller_batches=True)
+        dataset.update(batchsize=1, keep_smaller_batches=True) # cover default
         dataset.save(args.out)
     else:
         print('Not defined')
