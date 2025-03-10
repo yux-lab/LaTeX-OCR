@@ -84,7 +84,7 @@ def evaluate(model: Model, dataset: Im2LatexDataset, args: Munch, num_batches: i
             # get image path
             image_path = dataset.images[i]
 
-            # 保存到 CSV
+            # save to CSV
             writer.writerow([image_path, pred_latex, truth_latex, bleu, edit_dist, tok_acc])
 
             pbar.set_description(
